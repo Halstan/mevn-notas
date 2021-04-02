@@ -2,6 +2,16 @@
   <b-container>
     <h1 class="text-center">Tipos</h1>
 
+    <b-alert
+      :show="dismissCountDown"
+      dismissible
+      :variant="mensaje.color"
+      @dismissed="dismissCountDown = 0"
+      @dismiss-count-down="countDownChanged"
+    >
+      {{ mensaje.texto }}
+    </b-alert>
+
     <b-form @keydown.enter.prevent>
       <b-form-group>
         <b-input
@@ -47,13 +57,13 @@
           class="btn-sm"
           variant="outline-primary"
           @click="buscar(row.item._id)"
-          >Editar</b-button
+          ><b-icon icon="pencil" aria-hidden="true"></b-icon> Editar</b-button
         >
         <b-button
           class="ml-2 btn-sm"
           variant="outline-danger"
           @click="eliminarTipo(row.item._id)"
-          >Eliminar</b-button
+          ><b-icon icon="trash" aria-hidden="true"></b-icon> Eliminar</b-button
         >
       </template>
     </b-table>
@@ -65,7 +75,13 @@ export default {
   name: "Tipos",
   data() {
     return {
+      dismissSecs: 5,
+      dismissCountDown: 0,
       isEditable: false,
+      mensaje: {
+        color: "",
+        texto: "",
+      },
       fields: [
         {
           key: "_id",
@@ -115,7 +131,11 @@ export default {
           this.tipo = {};
         })
         .catch((err) => {
-          console.log(err.response);
+          this.mensaje = {
+            color: "danger",
+            texto: err.response.data.err.errors.nombre.message,
+          };
+          this.showAlert();
         });
     },
     buscar(id) {
@@ -162,9 +182,14 @@ export default {
       this.isEditable = false;
       this.tipo = {};
     },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    },
+    showAlert() {
+      this.dismissCountDown = this.dismissSecs;
+    },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

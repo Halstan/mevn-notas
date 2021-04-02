@@ -22,8 +22,13 @@ const routes = [
   {
     path: "/tipos",
     name: "Tipos",
-    component: () => import("../views/Tipos.vue")
-  }
+    component: () => import("../views/Tipos.vue"),
+  },
+  {
+    path: "/tareas",
+    name: "Tareas",
+    component: () => import("../views/Tareas.vue"),
+  },
 ];
 
 const router = new VueRouter({

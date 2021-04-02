@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.post("/tareas", async (req, res) => {
     try {
-        const tarea = await Tarea.create(req.body)
+        let tarea = await Tarea.create(req.body)
+        tarea = await tarea.populate("tipo").execPopulate()
         return res.json(tarea);
     } catch (err) {
         return res.status(400).json({
@@ -40,7 +41,8 @@ router.get("/tareas/:id", async (req, res) => {
 router.put("/tareas/:id", async (req, res) => {
     const _id = req.params.id;
     try {
-        const tarea = await Tarea.findByIdAndUpdate(_id, req.body, { new: true, useFindAndModify: false });
+        let tarea = await Tarea.findByIdAndUpdate(_id, req.body, { new: true, useFindAndModify: false });
+        tarea = await tarea.populate("tipo").execPopulate()
         return res.status(200).json(tarea);
     } catch (err) {
         return res.status(400).json({
