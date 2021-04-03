@@ -26,6 +26,12 @@
           </b-form-select-option>
         </b-form-select>
       </b-form-group>
+      <b-form-group v-if="isEditable">
+        <b-form-checkbox v-model="tarea.isPendiente">
+          ¿Pendiente?
+        </b-form-checkbox>
+        {{ tarea }}
+      </b-form-group>
       <b-button
         v-show="!isEditable"
         type="submit"
@@ -50,9 +56,13 @@
       >
     </b-form>
 
-    <b-table striped hover :items="tareas" :fields="fields">
+    <b-table striped responsive hover :items="tareas" :fields="fields">
+      <template #cell(isPendiente)="data">
+        {{ data.item.isPendiente ? "Incompleto" : "Completo" }}
+      </template>
       <template #cell(acciones)="row">
         <b-button
+          v-if="row.item.isPendiente"
           class="btn-sm"
           variant="outline-primary"
           @click="buscar(row.item._id)"
@@ -94,6 +104,10 @@ export default {
           sortable: true,
         },
         {
+          key: "isPendiente",
+          label: "Pendiente",
+        },
+        {
           key: "acciones",
           label: "Acciones",
         },
@@ -104,6 +118,7 @@ export default {
         _id: "",
         nombre: "",
         descripcion: "",
+        isPendiente: true,
         tipo: {
           _id: "",
         },
@@ -137,6 +152,7 @@ export default {
     },
     registrar() {
       delete this.tarea._id;
+      delete this.tarea.isPendiente;
       this.axios
         .post("/tareas", this.tarea)
         .then((res) => {
@@ -159,6 +175,7 @@ export default {
           this.tarea.nombre = res.data.nombre;
           this.tarea.descripcion = res.data.descripcion;
           this.tarea.tipo._id = res.data.tipo._id;
+          this.tarea.isPendiente = res.data.isPendiente;
           this.isEditable = true;
         })
         .catch((err) => {
@@ -175,6 +192,7 @@ export default {
           this.tareas[index].nombre = res.data.nombre;
           this.tareas[index].descripcion = res.data.descripcion;
           this.tareas[index].tipo = res.data.tipo;
+          this.tareas[index].isPendiente = res.data.isPendiente;
           this.cancelar();
         })
         .catch((err) => {

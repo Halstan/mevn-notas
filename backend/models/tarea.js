@@ -14,7 +14,7 @@ const tarea = new Schema({
         type: Date,
         default: Date.now
     },
-    isActivo: {
+    isPendiente: {
         type: Boolean,
         default: true
     }
