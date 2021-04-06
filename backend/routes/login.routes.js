@@ -15,13 +15,13 @@ router.post('/login', async (req, res) => {
 
         if (!usuario) {
             return res.status(404).json({
-                mensaje: "Email no encontrado"
+                mensaje: "Credenciales invalidas"
             })
         }
 
         if (!bcrypt.compareSync(body.password, usuario.password)) {
             return res.status(404).json({
-                mensaje: "Contraseña incorrecta"
+                mensaje: "Credenciales invalidas"
             })
         }
 
