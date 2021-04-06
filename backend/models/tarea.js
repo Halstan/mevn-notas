@@ -10,6 +10,7 @@ const tarea = new Schema({
         type: mongoose.Schema.Types.ObjectId, ref: 'Tipo'
     },
     descripcion: String,
+    usuarioId: String,
     fechaRegistro: {
         type: Date,
         default: Date.now
@@ -19,7 +20,6 @@ const tarea = new Schema({
         default: true
     }
 })
-
 const Tarea = mongoose.model('Tarea', tarea);
 
 export default Tarea;

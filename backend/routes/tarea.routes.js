@@ -1,11 +1,17 @@
 import express from "express";
 import Tarea from "../models/tarea";
+import { verifyAuth } from "../middlewares/authentication"
 
 const router = express.Router();
 
-router.post("/tareas", async (req, res) => {
+router.post("/tareas", verifyAuth, async (req, res) => {
+
+    let body = req.body;
+
+    body.usuarioId = req.usuario._id
+
     try {
-        let tarea = await Tarea.create(req.body)
+        let tarea = await Tarea.create(body)
         tarea = await tarea.populate("tipo").execPopulate()
         return res.json(tarea);
     } catch (err) {
@@ -15,9 +21,12 @@ router.post("/tareas", async (req, res) => {
         });
     }
 })
-router.get("/tareas", async (req, res) => {
+router.get("/tareas", verifyAuth, async (req, res) => {
+
+    const usuarioId = req.usuario._id
+
     try {
-        const tareas = await Tarea.find().populate("tipo")
+        const tareas = await Tarea.find({ usuarioId }).populate("tipo")
         return res.json(tareas)
     } catch (err) {
         return res.status(400).json({

@@ -23,6 +23,8 @@ mongoose.connect(uri, options).then(
     }
 )
 
+mongoose.set('debug', true)
+
 app.use(morgan('dev'))
 app.use(cors())
 app.use(express.json());
@@ -34,7 +36,7 @@ app.use(express.urlencoded({ extended: true }))
     res.render(path.join(__dirname + '/dist/index.html'));
 });*/
 
-app.use("/api", require("./routes/tipo.routes"), require("./routes/tarea.routes"));
+app.use("/api", require("./routes/tipo.routes"), require("./routes/tarea.routes"), require("./routes/user.routes"), require("./routes/login.routes"));
 
 app.set('puerto', process.env.PORT || 7000)
 

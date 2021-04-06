@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "Tareas",
   data() {
@@ -129,10 +130,19 @@ export default {
     this.getTareas();
     this.getTipos();
   },
+  computed: {
+    ...mapState(["token"]),
+  },
   methods: {
     getTareas() {
+      const config = {
+        headers: {
+          token: this.token,
+        },
+      };
+
       this.axios
-        .get("/tareas")
+        .get("/tareas", config)
         .then((res) => {
           this.tareas = res.data;
         })
@@ -151,10 +161,15 @@ export default {
         });
     },
     registrar() {
+      const config = {
+        headers: {
+          token: this.token,
+        },
+      };
       delete this.tarea._id;
       delete this.tarea.isPendiente;
       this.axios
-        .post("/tareas", this.tarea)
+        .post("/tareas", this.tarea, config)
         .then((res) => {
           this.tareas.push(res.data);
           this.tarea.descripcion = "";
